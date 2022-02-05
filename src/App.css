@@ -11,11 +11,34 @@
   margin-top: 150px;
 }
 
+.white {
+  background: white;
+}
+.boxed {
+  padding: 20px;
+  border-radius: 5px;
+}
+
 .container {
   max-width: 1000px;
   margin: 0 auto;
   min-height: 80vh;
   margin-top: 60px;
+}
+
+.centered {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.error-text {
+  color: red;
+}
+
+.dropzone {
+  border: 1px dotted black;
+  padding: 25px;
+  cursor: pointer;
 }
 
 .hero-slogan-section {

@@ -15,20 +15,6 @@
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <script>
-      (function (d, s) {
-        var js = d.createElement(s),
-          sc = d.getElementsByTagName(s)[0];
-        js.src =
-          "https://signwall.unlock-protocol.com/static/unlock.latest.min.js";
-        sc.parentNode.insertBefore(js, sc);
-      })(document, "script");
-    </script>
-    <script>
-      var unlockProtocolConfig = {
-        // signwallConfig object
-      };
-    </script>
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.

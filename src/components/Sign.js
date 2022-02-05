@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Spin } from "antd";
 import Packet from "./Packet";
 // import { getPacket, signPacket } from "../util/packet";
@@ -6,11 +6,14 @@ import { useParams } from "react-router-dom";
 import { createSignatureNFT } from "../util/nftport";
 import { ACTIVE_CHAIN_ID, CHAIN_OPTIONS } from "../util/constants";
 import logo from "../assets/logo.png";
+import { fetchIPFSDoc } from "../util/stor";
+import { markContractCompleted } from "../contract/polysignContract";
 
 function Sign({ match }) {
   const { signId } = useParams();
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(false);
+  const [currentAddress, setCurrentAddress] = useState();
   const [result, setResult] = useState();
 
   const fetchData = async () => {
@@ -21,7 +24,7 @@ function Sign({ match }) {
 
     setLoading(true);
     try {
-      const res = {}; //await getPacket(signId);
+      const res = await fetchIPFSDoc(signId);
       setData(res.data);
       console.log("esignature request", res.data);
     } catch (e) {
@@ -36,82 +39,41 @@ function Sign({ match }) {
     fetchData();
   }, [signId]);
 
-  const sign = async (signData, useCC) => {
-    let res;
-    const nftResults = {};
-    const { buyerAddress } = signData;
+  // TODO: implement authorization
+  const authorized = useMemo(
+    () => data.signerAddress !== currentAddress,
+    [data]
+  );
 
-    if (useCC) {
-      // Credit card
-      setLoading(true);
-      try {
-        res = {}; // await signPacket(buyerAddress, useCC);
-        nftResults["esignature"] = res;
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setLoading(false);
-      }
-    } else if (!signData.stream) {
-      // If crypto method, but not using signstream.
-      const config = {
-        pessimistic: true,
-        locks: {
-          "0x43090E9e8ec709811C777ffa03111Bd1Bb0ca65c": {
-            network: 4,
-            name: data.properties.title,
-          },
-        },
-        icon: "https://i.ibb.co/YR4nzVS/favicon.png",
-        // icon: "https://i.ibb.co/ZdR7Rm6/Screen-Shot-2022-01-15-at-11-45-39-PM.png",
-        callToAction: {
-          default: `${data.properties.title}. ${data.description}. Complete esignature for this esignature request below:`,
-        },
-        metadataInputs: [
-          {
-            name: "Address for NFT receipt",
-            type: "text",
-            required: true,
-          },
-          {
-            name: "Additional notes",
-            type: "text",
-            required: false,
-          },
-        ],
-      };
-      window.unlockProtocol && window.unlockProtocol.loadCheckoutModal(config);
-      // TODO: nft issue
-      return;
-    }
+  const sign = async () => {
+    let nftResults = {};
+
     setLoading(true);
 
     const chain = CHAIN_OPTIONS[data.chainId] || ACTIVE_CHAIN_ID;
 
-    const { destination, description, title } = data.properties;
+    const { description, title, signerAddress } = data;
 
     try {
-      // TODO: add esignature rollback if NFT mint fails.
-      nftResults["buyer"] = await createSignatureNFT(
-        chain,
-        title,
-        description,
-        data,
-        buyerAddress
-      );
       //   https://docs.nftport.xyz/docs/nftport/b3A6MjE2NjM5MDM-easy-minting-w-url
-      nftResults["issuer"] = await createSignatureNFT(
+      nftResults["signatureNft"] = await createSignatureNFT(
         chain,
         title,
         description,
         data,
-        destination
+        signerAddress
       );
+
+      const url = nftResults["transaction_external_url"];
+      const res = await markContractCompleted(data.address, url);
+      nftResults = { ...res, nftResults };
       setResult(nftResults);
     } catch (e) {
-      console.error(e);
+      console.error("error signing", e);
       alert(
-        "Error issuing NFT: " + e.toString() + ". Please retry esignature."
+        "Error completing esignature: " +
+          e.toString() +
+          ". Please try again later."
       );
     } finally {
       setLoading(false);
@@ -128,15 +90,12 @@ function Sign({ match }) {
 
   if (result) {
     return (
-      <div>
+      <div className="container">
         <img src={logo} className="header-logo" />
         <br />
         <br />
         <h1>Transaction complete!</h1>
-        <p>
-          Both you and the issuer received NFT's in your respective wallet
-          addresses.
-        </p>
+        <p>Access your completed polygon contract and signature packet.</p>
         <p>Full response below:</p>
         <pre>{JSON.stringify(result, null, "\t")}</pre>
       </div>
@@ -144,8 +103,10 @@ function Sign({ match }) {
   }
 
   return (
-    <div>
-      <Packet {...data} {...data.properties} sign={sign} signId={signId} />
+    <div className="container boxed white">
+      <h2 className="centered">Sign Documents</h2>
+      <br />
+      <Packet authorized={authorized} {...data} sign={sign} signId={signId} />
     </div>
   );
 }

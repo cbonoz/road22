@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import { Button, Input, Row, Col, Radio, Steps } from "antd";
 import TextArea from "antd/lib/input/TextArea";
-import { signatureUrl, ipfsUrl } from "../util";
+import { signatureUrl, ipfsUrl, getExplorerUrl } from "../util";
 import { EXAMPLE_FORM } from "../util/constants";
+import { FileDrop } from "./FileDrop/FileDrop";
+import { uploadFiles } from "../util/stor";
+import { deployContract } from "../contract/polysignContract";
+import { connectWallet, getWallet } from "../util/sequence";
 
 const { Step } = Steps;
 
@@ -17,43 +21,48 @@ function CreatePolysign(props) {
   };
 
   const isValid = (data) => {
-    return (
-      data.title &&
-      data.description &&
-      data.itemName &&
-      data.itemCost &&
-      data.destination &&
-      data.units
-    );
+    return data.title && data.description && data.signerAddress && data.files;
   };
   const isValidData = isValid(data);
 
   const create = async () => {
+    setError(undefined);
+
     if (!isValidData) {
-      alert("Title, description, and url are required");
+      alert("Please fill all required fields and provide at least one file.");
       return;
     }
-    setError(undefined);
-    setLoading(true);
 
-    const body = {
-      title: data.title,
-      items: [
-        {
-          name: data.itemName,
-          cost: data.itemCost,
-        },
-      ],
-      description: data.description,
-      units: data.units,
-      createdAt: new Date().getTime(),
-      destination: data.destination,
-      url: data.url,
-      recurring: data.recurring,
-    };
+    setLoading(true);
+    const body = { ...data };
+
+    // Format files for upload.
+    const files = body.files.map((x) => {
+      return x;
+    });
+
+    let res = { ...data };
 
     try {
-      const res = await CreatePolysign(body);
+      // 1) deploy base contract with metadata,
+      const contract = await deployContract(data.title, data.signerAddress);
+      res["contract"] = contract;
+
+      // 2) Upload files to moralis/ipfs,
+      const metadata = await uploadFiles(
+        files,
+        data.title,
+        data.description,
+        data.signerAddress,
+        contract.address
+      );
+
+      // 3) return shareable url.
+      res["signatureUrl"] = signatureUrl(metadata.hash());
+      res["hash"] = metadata.hash();
+      res["contractUrl"] = getExplorerUrl(contract.address);
+
+      // Result rendered after successful doc upload + contract creation.
       setResult(res);
       try {
         // await postPacket(res.esignature request);
@@ -84,14 +93,12 @@ function CreatePolysign(props) {
             <h2>Create new esignature request</h2>
             <br />
 
-            <h3 className="vertical-margin">Packet title:</h3>
+            <h3 className="vertical-margin">Esignature request title:</h3>
             <Input
               placeholder="Title of the esignature request"
-              value={data.packetName}
+              value={data.title}
               prefix="Title:"
-              onChange={(e) =>
-                updateData("esignature requestName", e.target.value)
-              }
+              onChange={(e) => updateData("title", e.target.value)}
             />
             <TextArea
               aria-label="Description"
@@ -102,7 +109,24 @@ function CreatePolysign(props) {
             />
 
             {/* TODO: add configurable amount of items */}
-            {/* <h3 className="vertical-margin">General information:</h3> */}
+            <h3 className="vertical-margin">Upload documents to esign:</h3>
+            <FileDrop
+              files={data.files}
+              setFiles={(files) => updateData("files", files)}
+            />
+
+            <h3 className="vertical-margin">Enter signer address:</h3>
+            <p>
+              In order to sign or agree to the documents, the viewer or
+              potential signer of the documents must prove ownership of a
+              particular address
+            </p>
+            <Input
+              placeholder="Wallet address of signer"
+              value={data.signerAddress}
+              prefix="Signer Address:"
+              onChange={(e) => updateData("signerAddress", e.target.value)}
+            />
             <br />
 
             <Button
@@ -123,15 +147,17 @@ function CreatePolysign(props) {
             {result && (
               <div>
                 <div className="success-text">Created esignature request!</div>
-                <a
-                  href={ipfsUrl(result.ipnft, "metadata.json")}
-                  target="_blank"
-                >
+                <a href={ipfsUrl(result.hash)} target="_blank">
                   View metadata
                 </a>
                 <br />
-                <a href={signatureUrl(result.ipnft)} target="_blank">
-                  Share esignature URL
+                <a href={result.contractUrl} target="_blank">
+                  View created contract
+                </a>
+                <br />
+                <p>Share this url with the potential signer:</p>
+                <a href={result.signatureUrl} target="_blank">
+                  Open Esignature Url
                 </a>
 
                 {/* <div>{JSON.stringify(result, null, "\t")}</div> */}

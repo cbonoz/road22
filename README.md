@@ -36,17 +36,29 @@ Creates a simple web3 hosted implementation of Docusign.
 
 ---
 
-To run/demo the project locally, NFTsign requires the following environment variables.
+To run/demo the project locally, Polysign requires the following environment variables.
 
 <pre>
-    REACT_APP_MORALIS_KEY={YOUR_MORALIS_AUTH_KEY} # Moralis authentication key for storage.
+    REACT_APP_MORALIS_ID={YOUR_MORALIS_APP_ID} # Moralis app id
+    REACT_APP_MORALIS_SERVER={YOUR_MORALIS_SERVER_URL} # Moralis server url
     REACT_APP_COVALENT_KEY={YOUR_COVALENT_API_KEY} # Covalent key for the history page.
     REACT_APP_NFT_PORT_KEY={YOUR_NFT_PORT_API_KEY} # NFT port api key for receipt creation.
 </pre>
 
+---
+
 After declaring the above environment variables, use the below command to start the project:
 
-`yarn && yarn start`
+<pre>
+yarn
+yarn start
+</pre>
+
+Recompiling contract:
+`cd contracts; npx hardhat compile`
+
+Example esignature requests contracts:
+http://localhost:3000/sign/QmUAS9XJyf9gPgadoVeExESiVnVJmVJW6qtcU4dzJzwG96
 
 <!--
 
