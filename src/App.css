@@ -1,0 +1,56 @@
+@import "~antd/dist/antd.css";
+
+/* .App {
+} */
+
+.hero-image {
+  width: 500px;
+}
+
+.hero-section {
+  margin-top: 150px;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  min-height: 80vh;
+  margin-top: 60px;
+}
+
+.hero-slogan-section {
+  font-size: 18px;
+  font-weight: 500;
+  margin-top: 50px;
+  margin-left: 25px;
+}
+
+.hero-slogan {
+  font-size: 28px;
+}
+
+.vertical-margin,
+.standard-button {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.ant-input,
+input,
+textarea {
+  max-width: 600px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.header-logo {
+  height: 40px;
+}
+
+.ant-layout-header {
+  background: white;
+}
