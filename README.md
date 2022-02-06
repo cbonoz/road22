@@ -14,7 +14,7 @@ Creates a web3 hosted implementation of Docusign-like capabilities / use-cases.
 
 - Enable anyone to create and collect esignature against documents without a vendor agreement.
 - Each packet of documents is made accessible at an IPFS url.
-- When the esignature is completed, an NFT is generated that links both the signer's signature and the documents being agreed on. 
+- When the esignature is completed, an NFT is generated that links both the signer's signature and the documents being agreed on.
 - Hosted documents and the request are immutable.
 - Smart contract deployed on Polygon which marks the progress/fulfillment of the esignature request. The contract can only be marked completed by the designated signer address at time of final signature.
 - View history of esignature NFT's using covalent directly from the app.
@@ -26,6 +26,7 @@ Creates a web3 hosted implementation of Docusign-like capabilities / use-cases.
 - NFTPort: Generation of the esignature record / proof. Attaches the final esignature/agreement to an NFT and saves a link to it in the smart contract.
 - Moralis: Serves as main backend for the app - uses IPFS to enable support/hosting of the document packets for each request.
 - Polygon: In-app deployment of the request smart contract and marked completed upon completion/fulfillment of the each request signer's signature.
+- Sequence: Wallet for facilitating polygon and submitting final sign request. Deployment can toggle between sequence wallet or metamask.
 
 <b>This project is a hackathon prototype and would require additional work / deployment to be production ready.
 
@@ -38,6 +39,7 @@ To run/demo the project locally, Polysign requires the following environment var
     REACT_APP_MORALIS_SERVER={YOUR_MORALIS_SERVER_URL} # Moralis server url
     REACT_APP_COVALENT_KEY={YOUR_COVALENT_API_KEY} # Covalent key for the history page.
     REACT_APP_NFT_PORT_KEY={YOUR_NFT_PORT_API_KEY} # NFT port api key for receipt creation.
+    REACT_APP_USE_SEQUENCE={TRUE_OR_FALSE (optional)} # Indicates whether to use sequence or metamask as primary wallet provider.
 </pre>
 
 ---

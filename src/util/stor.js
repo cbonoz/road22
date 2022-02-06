@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Moralis } from "moralis";
-import { ACTIVE_CHAIN_ID, IPFS_BASE_URL } from "./constants";
+import { ACTIVE_CHAIN_ID, IPFS_BASE_URL, USE_SEQUENCE } from "./constants";
 import SequenceConnector from "./SequenceConnector";
 
 export const saveObject = async (obj, filename) => {
@@ -18,11 +18,13 @@ export const uploadFiles = async (
   signerAddress,
   contractAddress
 ) => {
-  await Moralis.authenticate({
+  const params = {
     chainId: ACTIVE_CHAIN_ID.id,
-  });
-  // Add connector. iF USE_SEQUENCE
-  // connector: SequenceConnector,
+  };
+  if (USE_SEQUENCE) {
+    params["connector"] = SequenceConnector;
+  }
+  await Moralis.authenticate(params);
   // abi": [
   //     {
   //       "path": "moralis/logo.jpg",

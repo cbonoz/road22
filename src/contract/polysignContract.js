@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { USE_SEQUENCE } from "../util/constants";
+import { USE_SEQUENCE, ACTIVE_CHAIN_ID } from "../util/constants";
 import { connectWallet, getWallet } from "../util/sequence";
 import { POLYSIGN_CONTRACT } from "./metadata";
 
@@ -7,7 +7,8 @@ const getSigner = async () => {
   let signer;
   if (USE_SEQUENCE) {
     await connectWallet();
-    signer = await getWallet().getSigner();
+    const wallet = getWallet();
+    signer = await wallet.getAuthSigner(ACTIVE_CHAIN_ID.id);
   } else {
     await window.ethereum.enable();
     const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -43,11 +44,10 @@ export async function deployContract(title, signerAddress) {
     signer
   );
 
-  const address = ethers.utils.getAddress(signerAddress);
+  const validatedAddress = ethers.utils.getAddress(signerAddress);
 
   // Start deployment, returning a promise that resolves to a contract object
-  //   let contract = { address: signerAddress }; // TODO: fix factory
-  const contract = await factory.deploy(title, address);
+  const contract = await factory.deploy(title, validatedAddress);
   await contract.deployed();
   console.log("Contract deployed to address:", contract.address);
   return contract;

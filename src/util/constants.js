@@ -33,6 +33,6 @@ export const EXAMPLE_FORM = {
   files: [],
 };
 
-export const USE_SEQUENCE = false;
+export const USE_SEQUENCE = process.env.REACT_APP_USE_SEQUENCE || false;
 
-export const IPFS_BASE_URL = 'https://ipfs.moralis.io:2053/ipfs'
+export const IPFS_BASE_URL = "https://ipfs.moralis.io:2053/ipfs";

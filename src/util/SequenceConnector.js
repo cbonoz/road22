@@ -23,7 +23,7 @@ class SequenceConnector extends AbstractWeb3Connector {
 
     const accounts = await this.provider.listAccounts();
 
-    const account = accounts[0].toLowerCase();
+    const account = accounts[0];
     const { chainId } = this.provider;
     const verifiedChainId = chainId || ACTIVE_CHAIN_ID.id + "";
 
