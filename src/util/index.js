@@ -32,10 +32,11 @@ export const getDateStringFromTimestamp = (ts, showTime) => {
   return d.toLocaleDateString();
 };
 
-export const col = (k) => ({
+export const col = (k, render) => ({
   title: capitalize(k),
   dataIndex: k,
   key: k,
+  render,
 });
 
 export function bytesToSize(bytes) {

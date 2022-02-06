@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { Spin } from "antd";
 import Packet from "./Packet";
 import { useParams } from "react-router-dom";
-import { createSignatureNFT } from "../util/nftport";
+import { createSignatureNFT, getMintedNFT } from "../util/nftport";
 import { fetchIPFSDoc } from "../util/stor";
 import { getExplorerUrl, ipfsUrl } from "../util";
 import {
@@ -67,7 +67,14 @@ function Sign({ match }) {
       nftResults["signatureNft"] = res.data;
       const url = nftResults["transaction_external_url"];
       res = await markContractCompleted(contractAddress, url || signId);
-      nftResults = { ...res, nftResults };
+      nftResults = { nftResults, ...res };
+      try {
+        res = await getMintedNFT(res["hash"]);
+        nftResults = { nftResults, ...res };
+      } catch (e) {
+        // soft error for token id fetch.
+        console.error(e);
+      }
       setResult(nftResults);
     } catch (e) {
       console.error("error signing", e);

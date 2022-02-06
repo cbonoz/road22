@@ -9,15 +9,15 @@ export const APP_NAME = "Polysign";
 export const APP_DESC = "Polygon-backed esignature requests";
 
 export const CHAIN_OPTIONS = {
-  137: {
-    name: "Matic Mainnet",
-    url: "https://explorer-mainnet.maticvigil.com/",
-    id: 137,
-  },
   80001: {
     name: "Mumbai",
-    url: "https://mumbai.polygonscan.com/address/",
+    url: "https://mumbai.polygonscan.com/tx/",
     id: 80001,
+  },
+  137: {
+    name: "Matic Mainnet",
+    url: "https://polygonscan.com/tx/",
+    id: 137,
   },
 };
 // 1: { name: "ethereum", url: "https://etherscan.io/tx/", id: 1 },

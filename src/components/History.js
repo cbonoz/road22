@@ -13,13 +13,20 @@ const COLUMNS = [
   col("to_address"),
   col("value"),
   col("gas_spent"),
+  col(
+    "block_signed_at",
+    (row) =>
+      `${new Date(row).toLocaleDateString()} ${new Date(
+        row
+      ).toLocaleTimeString()}`
+  ),
 ];
 
 function History(props) {
   const [address, setAddress] = useState(
     "0x73bceb1cd57c711feac4224d062b0f6ff338501e"
   );
-  const [chainId, setChainId] = useState(1);
+  const [chainId, setChainId] = useState("80001");
   const [loading, setLoading] = useState();
   const [data, setData] = useState();
 
@@ -55,7 +62,7 @@ function History(props) {
       <br />
       <p></p>
       <Select
-        defaultValue="1"
+        defaultValue={chainId}
         style={{ width: 120 }}
         onChange={(v) => setChainId(v)}
       >

@@ -40,3 +40,17 @@ export const createSignatureNFT = async (
 
   return axios.request(options);
 };
+
+export const getMintedNFT = (txHash) => {
+  var options = {
+    method: "GET",
+    url: "https://api.nftport.xyz/v0/mints/" + txHash,
+    params: { chain: "polygon" },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: NFT_PORT_KEY,
+    },
+  };
+
+  return axios.request(options);
+};

@@ -47,8 +47,14 @@ export async function deployContract(title, signerAddress) {
   const validatedAddress = ethers.utils.getAddress(signerAddress);
 
   // Start deployment, returning a promise that resolves to a contract object
-  const contract = await factory.deploy(title, validatedAddress);
-  await contract.deployed();
+  let contract;
+  if (USE_SEQUENCE) {
+    const transaction = factory.getDeployTransaction(title, validatedAddress);
+    contract = await signer.sendTransaction(transaction);
+  } else {
+    contract = await factory.deploy(title, validatedAddress);
+    await contract.deployed();
+  }
   console.log("Contract deployed to address:", contract.address);
   return contract;
 }

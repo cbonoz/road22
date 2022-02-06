@@ -12,12 +12,12 @@ Creates a web3 hosted implementation of Docusign-like capabilities / use-cases.
 
 ### Benefits
 
-- Enable anyone to create and collect esignature against documents without a vendor agreement.
-- Each packet of documents is made accessible at an IPFS url.
+- Polysign enables anyone to create and collect esignature against documents without a vendor agreement.
+- Each packet of documents for esignature is made accessible at an IPFS url.
 - When the esignature is completed, an NFT is generated that links both the signer's signature and the documents being agreed on.
 - Hosted documents and the request are immutable.
 - Smart contract deployed on Polygon which marks the progress/fulfillment of the esignature request. The contract can only be marked completed by the designated signer address at time of final signature.
-- View history of esignature NFT's using covalent directly from the app.
+- View history of requests and completed esignatures using the covalent chain history API directly from the app.
 - An individual in the context of the Polysign application is the pairing of a canvas (handwritten) signature and wallet signature/address.
 
 ### Technologies used
@@ -107,6 +107,11 @@ Github
 ### Dev Notes
 
 - https://docs.sequence.build/build-with-sequence/connect-wallet
+
+#### Sequence wallet
+
+TODO:
+<img src="./img/sequence.png" width=800/ >
 
 ### Useful links
 
