@@ -53,6 +53,15 @@ export async function deployContract(title, signerAddress) {
   return contract;
 }
 
+export const validAddress = (addr) => {
+  try {
+    ethers.utils.getAddress(addr);
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
 export const markContractCompleted = async (contractAddress, signatureUrl) => {
   if (!contractAddress || !signatureUrl) {
     return {};

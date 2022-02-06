@@ -4,9 +4,9 @@ import TextArea from "antd/lib/input/TextArea";
 import { signatureUrl, ipfsUrl, getExplorerUrl } from "../util";
 import { EXAMPLE_FORM } from "../util/constants";
 import { FileDrop } from "./FileDrop/FileDrop";
+import { ethers } from "ethers";
 import { uploadFiles } from "../util/stor";
-import { deployContract } from "../contract/polysignContract";
-import { connectWallet, getWallet } from "../util/sequence";
+import { deployContract, validAddress } from "../contract/polysignContract";
 
 const { Step } = Steps;
 
@@ -21,7 +21,12 @@ function CreatePolysign(props) {
   };
 
   const isValid = (data) => {
-    return data.title && data.description && data.signerAddress && data.files;
+    return (
+      data.title &&
+      data.description &&
+      data.files.length > 0 &&
+      validAddress(data.signerAddress)
+    );
   };
   const isValidData = isValid(data);
 
@@ -29,7 +34,9 @@ function CreatePolysign(props) {
     setError(undefined);
 
     if (!isValidData) {
-      alert("Please fill all required fields and provide at least one file.");
+      setError(
+        "Please provide a title, description, valid address, and at least one file."
+      );
       return;
     }
 
@@ -133,7 +140,7 @@ function CreatePolysign(props) {
               type="primary"
               className="standard-button"
               onClick={create}
-              disabled={loading || !isValidData}
+              disabled={loading} // || !isValidData}
               loading={loading}
             >
               Create esignature request!

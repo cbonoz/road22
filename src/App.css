@@ -26,6 +26,10 @@
   margin-top: 60px;
 }
 
+.success-text {
+  color: green;
+}
+
 .centered {
   margin: 0 auto;
   text-align: center;

@@ -69,10 +69,32 @@ Sequence - Polygon contract deploy
 
 Demo flow:
 Show docusign site
-Show Polysign
-
+Show Polysign.
+Create an esign request (moralis)
+Submit (Can be metamask or sequence wallet)
+Show result (moralis, polygon contract)
+View the completed assets (polygon, contract interaction, nftport)
+Github
 
 -->
+
+### Screenshots
+
+#### Home page
+
+<img src="./img/home.png" width=800/>
+
+#### Creating a request
+
+<img src="./img/create.png" width=800/>
+
+### Esigning
+
+<img src="./img/esign.png" width=800>
+
+### Completion esignature NFT
+
+<img src="./img/completed.png" width=800>
 
 ### Dev Notes
 

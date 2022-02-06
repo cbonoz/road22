@@ -8,7 +8,7 @@ import { CheckCircleOutlined, CheckCircleTwoTone } from "@ant-design/icons";
 
 const CHECKLIST_ITEMS = [
   "Free esignature request page hosting on IPFS",
-  "Receipts auto-generated as NFTs",
+  "Completed esignatures saved on Smart Contracts",
   "No vendor agreements required",
 ];
 
@@ -32,10 +32,11 @@ function Home(props) {
                 .
               </p>
             </div>
+            {/* // "#eb2f96" */}
             {CHECKLIST_ITEMS.map((item, i) => {
               return (
                 <p>
-                  <CheckCircleTwoTone twoToneColor="#eb2f96" />
+                  <CheckCircleTwoTone twoToneColor="#00aa00" />
                   &nbsp;
                   {item}
                 </p>
