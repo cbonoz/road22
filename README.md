@@ -8,31 +8,26 @@ Polysign
 
 Polysign is a prototype web3 implementation of docusign built on Polygon.
 
-Creates a simple web3 hosted implementation of Docusign.
+Creates a web3 hosted implementation of Docusign-like capabilities / use-cases.
 
 ### Benefits
 
+- Enable anyone to create and collect esignature against documents without a vendor agreement.
 - Each packet of documents is made accessible at an IPFS url.
-- When the esignature is completed, an NFT is generated that links both the canvas signature and the documents being agreed on. The hosted documents are immutable.
+- When the esignature is completed, an NFT is generated that links both the signer's signature and the documents being agreed on. 
+- Hosted documents and the request are immutable.
+- Smart contract deployed on Polygon which marks the progress/fulfillment of the esignature request. The contract can only be marked completed by the designated signer address at time of final signature.
 - View history of esignature NFT's using covalent directly from the app.
 - An individual in the context of the Polysign application is the pairing of a canvas (handwritten) signature and wallet signature/address.
 
 ### Technologies used
 
-- Covalent: History queries of past esignatures
-- NFTPort: Generation of the esignature record / proof.
-- Moralis: Hosting of the document packets per request
-- Polygon: Generation of the smart contract fulfilled upon completion/fulfillment of the packet documents signature.
+- Covalent: Enables in-app history queries of past esignature requests and fulfillment for a given polygon address.
+- NFTPort: Generation of the esignature record / proof. Attaches the final esignature/agreement to an NFT and saves a link to it in the smart contract.
+- Moralis: Serves as main backend for the app - uses IPFS to enable support/hosting of the document packets for each request.
+- Polygon: In-app deployment of the request smart contract and marked completed upon completion/fulfillment of the each request signer's signature.
 
-#### Esignature
-
-#### Creating an esignature request contract
-
-### Signing (fulfilling the contract)
-
-<b>This project is a hackathon prototype and would require additional work to be production ready (i.e. around some of the final checkout flows).</b>
-
-### View the esignature result
+<b>This project is a hackathon prototype and would require additional work / deployment to be production ready.
 
 ---
 
@@ -66,14 +61,17 @@ Sponsors:
 Polygon - Deploys a smart contract for esign
 Moralis - Doc storage
 Sequence - Polygon contract deploy
+Covalent - history
+NFTport - signature NFT
 
 Demo flow:
-Show docusign site
+Show docusign site / discuss industry baseline
 Show Polysign.
 Create an esign request (moralis)
 Submit (Can be metamask or sequence wallet)
 Show result (moralis, polygon contract)
 View the completed assets (polygon, contract interaction, nftport)
+History page (look up a given contract owner's request/collection history)
 Github
 
 -->
@@ -99,6 +97,10 @@ Github
 ### Completion esignature NFT
 
 <img src="./img/completed.png" width=800>
+
+### Deployed Contract
+
+<img src="./img/sol.png" width=800/ >
 
 ### Dev Notes
 
