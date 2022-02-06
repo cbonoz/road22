@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Spin } from "antd";
 import Packet from "./Packet";
-// import { getPacket, signPacket } from "../util/packet";
 import { useParams } from "react-router-dom";
 import { createSignatureNFT } from "../util/nftport";
-import { ACTIVE_CHAIN_ID, CHAIN_OPTIONS } from "../util/constants";
-import logo from "../assets/logo.png";
 import { fetchIPFSDoc } from "../util/stor";
+import { getExplorerUrl, ipfsUrl } from "../util";
 import { markContractCompleted } from "../contract/polysignContract";
 
 function Sign({ match }) {
@@ -44,37 +42,29 @@ function Sign({ match }) {
     () => data.signerAddress !== currentAddress,
     [data]
   );
+  const { description, title, signerAddress, contractAddress } = data;
 
-  const sign = async () => {
+  const sign = async (signatureData) => {
     let nftResults = {};
 
     setLoading(true);
 
-    const chain = CHAIN_OPTIONS[data.chainId] || ACTIVE_CHAIN_ID;
-
-    const { description, title, signerAddress } = data;
-
     try {
       //   https://docs.nftport.xyz/docs/nftport/b3A6MjE2NjM5MDM-easy-minting-w-url
-      nftResults["signatureNft"] = await createSignatureNFT(
-        chain,
+      let res = await createSignatureNFT(
         title,
         description,
-        data,
-        signerAddress
+        signerAddress,
+        signatureData
       );
-
+      nftResults["signatureNft"] = res.data;
       const url = nftResults["transaction_external_url"];
-      const res = await markContractCompleted(data.address, url);
+      res = await markContractCompleted(contractAddress, url || signId);
       nftResults = { ...res, nftResults };
       setResult(nftResults);
     } catch (e) {
       console.error("error signing", e);
-      alert(
-        "Error completing esignature: " +
-          e.toString() +
-          ". Please try again later."
-      );
+      alert("Error completing esignature: " + JSON.stringify(e));
     } finally {
       setLoading(false);
     }
@@ -91,11 +81,15 @@ function Sign({ match }) {
   if (result) {
     return (
       <div className="container">
-        <img src={logo} className="header-logo" />
+        {/* <img src={logo} className="header-logo" /> */}
         <br />
         <br />
         <h1>Transaction complete!</h1>
         <p>Access your completed polygon contract and signature packet.</p>
+
+        <a href={getExplorerUrl(contractAddress)} target="_blank">
+          View Contract
+        </a>
         <p>Full response below:</p>
         <pre>{JSON.stringify(result, null, "\t")}</pre>
       </div>

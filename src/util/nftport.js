@@ -2,23 +2,28 @@ import axios from "axios";
 import { createJsonFile } from ".";
 import { NFT_PORT_KEY } from "./constants";
 
-export const createSignatureNFT = (
-  chain,
+export const createSignatureNFT = async (
   name,
   description,
-  data,
-  ownerAddress
+  ownerAddress,
+  signatureData
 ) => {
   const params = {
-    chain: chain.name || "rinkeby",
+    chain: "polygon",
     mint_to_address: ownerAddress,
     description,
     name,
   };
 
   const formData = new FormData();
-  const f = createJsonFile(data, "metadata.json");
-  formData.append("file", f, data.title);
+  // https://stackoverflow.com/questions/6850276/how-to-convert-dataurl-to-file-object-in-javascript
+  const blob = await (await fetch(signatureData)).blob();
+  const file = new File([blob], "signature.jpg", {
+    type: "image/jpeg",
+    lastModified: new Date(),
+  });
+  // const f = createJsonFile(data, "metadata.json");
+  formData.append("file", file, file.name);
 
   var options = {
     method: "POST",

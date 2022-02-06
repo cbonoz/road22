@@ -1,15 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import SignatureCanvas from "react-signature-canvas";
 import { Button, Modal, Input } from "antd";
-import { getExplorerUrl } from "../util";
+import { getExplorerUrl, ipfsUrl } from "../util";
+import { ACTIVE_CHAIN_ID } from "../util/constants";
 
 function Packet(props) {
   const [showModal, setShowModal] = useState(false);
   const [name, setName] = useState();
+  const sigCanvas = useRef();
+
+  const {
+    signId,
+    contractAddress,
+    authorized,
+    signerAddress,
+    loading,
+    sign,
+    title,
+    files,
+  } = props;
+
+  const postSignature = () => {
+    const dataUrl = sigCanvas.current.toDataURL();
+    sign(dataUrl);
+  };
 
   const openUrl = (url) => window.open(url, "_blank");
-
-  const { authorized, signerAddress, loading, sign, title, files } = props;
 
   if (!authorized) {
     return (
@@ -31,14 +47,18 @@ function Packet(props) {
   }
   return (
     <div>
-      <p>
-        By continuing below, you agree to the included documents available for
-        viewing/download below.
-      </p>
-      <div>{JSON.stringify(props, null, "\t")}</div>
+      {/* <div>{JSON.stringify(props, null, "\t")}</div> */}
       <div>
-        <a href={getExplorerUrl(props.contractAddress)} target="_blank">
-          View Contract
+        <h1>{props.title}</h1>
+        <h3>{props.description}</h3>
+      </div>
+      <div>
+        <a href={getExplorerUrl(contractAddress)} target="_blank">
+          View Contract ({ACTIVE_CHAIN_ID.name})
+        </a>
+        <br />
+        <a href={ipfsUrl(signId)} target="_blank">
+          View Request
         </a>
       </div>
 
@@ -61,6 +81,10 @@ function Packet(props) {
       })}
       <br />
       <br />
+      <p>
+        By continuing, you agree to the documents listed and available for
+        download above.
+      </p>
       <Button
         type="primary"
         onClick={() => setShowModal(true)}
@@ -76,7 +100,12 @@ function Packet(props) {
           <Button key="back" onClick={() => setShowModal(false)}>
             Cancel
           </Button>,
-          <Button key="submit" type="primary" loading={loading} onClick={sign}>
+          <Button
+            key="submit"
+            type="primary"
+            loading={loading}
+            onClick={postSignature}
+          >
             Sign
           </Button>,
         ]}
@@ -91,6 +120,7 @@ function Packet(props) {
         <hr />
         <p>Draw signature:</p>
         <SignatureCanvas
+          ref={sigCanvas}
           penColor="green"
           canvasProps={{ width: 500, height: 200, className: "sigCanvas" }}
         />

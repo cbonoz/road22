@@ -40,11 +40,15 @@ export async function deployContract(title, signerAddress) {
 }
 
 export const markContractCompleted = async (contractAddress, signatureUrl) => {
+  if (!contractAddress || !signatureUrl) {
+    return {};
+  }
   const signer = await getSigner();
   const polysignContract = new ethers.Contract(
     contractAddress,
     POLYSIGN_CONTRACT.abi,
     signer
   );
-  return await polysignContract.markCompleted(signatureUrl);
+  const result = await polysignContract.markCompleted(signatureUrl);
+  return result;
 };
