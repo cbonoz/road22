@@ -16,6 +16,20 @@ const getSigner = async () => {
   return signer;
 };
 
+export const getPrimaryAccount = async () => {
+  let provider;
+  if (USE_SEQUENCE) {
+    await connectWallet();
+    provider = getWallet().getProvider();
+  } else {
+    await window.ethereum.enable();
+    provider = new ethers.providers.Web3Provider(window.ethereum);
+  }
+
+  const accounts = await provider.listAccounts();
+  return accounts[0];
+};
+
 // https://dapp-world.com/smartbook/how-to-use-ethers-with-polygon-k5Hn
 export async function deployContract(title, signerAddress) {
   const signer = await getSigner();

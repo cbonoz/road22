@@ -5,7 +5,10 @@ import { useParams } from "react-router-dom";
 import { createSignatureNFT } from "../util/nftport";
 import { fetchIPFSDoc } from "../util/stor";
 import { getExplorerUrl, ipfsUrl } from "../util";
-import { markContractCompleted } from "../contract/polysignContract";
+import {
+  getPrimaryAccount,
+  markContractCompleted,
+} from "../contract/polysignContract";
 
 function Sign({ match }) {
   const { signId } = useParams();
@@ -37,12 +40,16 @@ function Sign({ match }) {
     fetchData();
   }, [signId]);
 
-  // TODO: implement authorization
-  const authorized = useMemo(
-    () => data.signerAddress !== currentAddress,
-    [data]
-  );
   const { description, title, signerAddress, contractAddress } = data;
+  // TODO: implement authorization
+  const authorized = useMemo(async () => {
+    if (!data) {
+      return false;
+    }
+    const currentAccount = await getPrimaryAccount();
+    console.log("auth", signerAddress, currentAccount);
+    return signerAddress === currentAccount;
+  }, [data]);
 
   const sign = async (signatureData) => {
     let nftResults = {};

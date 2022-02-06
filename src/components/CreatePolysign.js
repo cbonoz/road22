@@ -155,10 +155,14 @@ function CreatePolysign(props) {
                   View created contract
                 </a>
                 <br />
-                <p>Share this url with the potential signer:</p>
-                <a href={result.signatureUrl} target="_blank">
-                  Open Esignature Url
-                </a>
+                <br />
+                <p>
+                  Share this url with the potential signer:
+                  <br />
+                  <a href={result.signatureUrl} target="_blank">
+                    Open eSignature url
+                  </a>
+                </p>
 
                 {/* <div>{JSON.stringify(result, null, "\t")}</div> */}
               </div>

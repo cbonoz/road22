@@ -45,6 +45,9 @@ function Packet(props) {
       </div>
     );
   }
+
+  const filesToSign = files || [];
+
   return (
     <div>
       {/* <div>{JSON.stringify(props, null, "\t")}</div> */}
@@ -64,7 +67,7 @@ function Packet(props) {
 
       <br />
       <h3>Documents to acknowledge: </h3>
-      {files.map((f, i) => {
+      {filesToSign.map((f, i) => {
         return (
           <li key={i}>
             <a
@@ -88,7 +91,7 @@ function Packet(props) {
       <Button
         type="primary"
         onClick={() => setShowModal(true)}
-        disabled={!authorized}
+        disabled={!authorized || filesToSign.length === 0}
       >
         Accept Documents
       </Button>

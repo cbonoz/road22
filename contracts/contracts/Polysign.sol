@@ -32,7 +32,7 @@ contract Polysign is Ownable {
     function markCompleted(string memory _signatureUrl) public {
         // signatureUrl is the url of the completed esignature receipt.
         // Assert caller has the same address as seller address else fail.
-        require(msg.sender == this.signerAddress, "Only the designated signer can complete the contract");
+        require(address(msg.sender) == this.signerAddress, "Only the designated signer can complete the contract");
         signatureUrl = _signatureUrl;
         completed = true;
     }
