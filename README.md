@@ -1,5 +1,5 @@
 <p align='center'>
-    <img src='./img/logo_3_2.png'/>
+    <img src='./img/logo_3_2.png' width=400/>
 </p>
 
 Polysign
