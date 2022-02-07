@@ -92,7 +92,7 @@ function History(props) {
                 onClick: (event) => {
                   console.log("event", event.target.value);
                   window.open(
-                    `${CHAIN_OPTIONS[chainId].url}${record.tx_hash}`,
+                    `${CHAIN_OPTIONS[chainId].url}tx/${record.tx_hash}`,
                     "_blank"
                   );
                 }, // click row

@@ -3,20 +3,18 @@ export const NFT_PORT_KEY = process.env.REACT_APP_NFT_PORT_KEY; // nft port key
 export const MORALIS_APP_ID = process.env.REACT_APP_MORALIS_ID; // your API key from https://nft.storage/manage)
 export const MORALIS_SERVER = process.env.REACT_APP_MORALIS_SERVER; // your API key from https://nft.storage/manage)
 
-console.log("hashes", MORALIS_APP_ID, COVALENT_KEY, NFT_PORT_KEY);
-
 export const APP_NAME = "Polysign";
 export const APP_DESC = "Polygon-backed esignature requests";
 
 export const CHAIN_OPTIONS = {
   80001: {
     name: "Mumbai",
-    url: "https://mumbai.polygonscan.com/tx/",
+    url: "https://mumbai.polygonscan.com/",
     id: 80001,
   },
   137: {
     name: "Matic Mainnet",
-    url: "https://polygonscan.com/tx/",
+    url: "https://polygonscan.com/",
     id: 137,
   },
 };
@@ -36,3 +34,5 @@ export const EXAMPLE_FORM = {
 export const USE_SEQUENCE = process.env.REACT_APP_USE_SEQUENCE || false;
 
 export const IPFS_BASE_URL = "https://ipfs.moralis.io:2053/ipfs";
+
+console.log("hashes", MORALIS_APP_ID, COVALENT_KEY, NFT_PORT_KEY, USE_SEQUENCE);
