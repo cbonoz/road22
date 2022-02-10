@@ -22,9 +22,11 @@ export const getPrimaryAccount = async () => {
   if (USE_SEQUENCE) {
     await connectWallet();
     provider = getWallet().getProvider();
-  } else {
+  } else if (window.ethereum) {
     await window.ethereum.enable();
     provider = new ethers.providers.Web3Provider(window.ethereum);
+  } else {
+    return undefined; // No supported account detected.
   }
 
   const accounts = await provider.listAccounts();

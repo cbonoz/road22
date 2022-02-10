@@ -16,6 +16,7 @@ function Sign({ match }) {
   const [loading, setLoading] = useState(false);
   const [currentAddress, setCurrentAddress] = useState();
   const [result, setResult] = useState();
+  const [authed, setAuthed] = useState(false);
 
   const fetchData = async () => {
     console.log("fetch", signId);
@@ -24,6 +25,10 @@ function Sign({ match }) {
     }
 
     setLoading(true);
+    try {
+      const acc = await getPrimaryAccount();
+      setAuthed(!!acc);
+    } catch (e) {}
     try {
       const res = await fetchIPFSDoc(signId);
       setData(res.data);
@@ -41,15 +46,6 @@ function Sign({ match }) {
   }, [signId]);
 
   const { description, title, signerAddress, contractAddress } = data;
-  // TODO: implement authorization
-  const authorized = useMemo(async () => {
-    if (!data) {
-      return false;
-    }
-    const currentAccount = await getPrimaryAccount();
-    console.log("auth", signerAddress, currentAccount);
-    return signerAddress === currentAccount;
-  }, [data]);
 
   const sign = async (signatureData) => {
     let nftResults = {};
@@ -114,7 +110,7 @@ function Sign({ match }) {
     <div className="container boxed white">
       <h2 className="centered">Sign Documents</h2>
       <br />
-      <Packet authorized={authorized} {...data} sign={sign} signId={signId} />
+      <Packet {...data} authed={authed} sign={sign} signId={signId} />
     </div>
   );
 }

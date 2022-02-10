@@ -12,7 +12,7 @@ function Packet(props) {
   const {
     signId,
     contractAddress,
-    authorized,
+    authed,
     signerAddress,
     loading,
     sign,
@@ -26,8 +26,9 @@ function Packet(props) {
   };
 
   const openUrl = (url) => window.open(url, "_blank");
+  console.log("authorized", authed);
 
-  if (!authorized) {
+  if (!authed) {
     return (
       <div className="centered">
         <p>
@@ -91,7 +92,7 @@ function Packet(props) {
       <Button
         type="primary"
         onClick={() => setShowModal(true)}
-        disabled={!authorized || filesToSign.length === 0}
+        disabled={!authed || filesToSign.length === 0}
       >
         Accept Documents
       </Button>
